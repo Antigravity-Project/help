@@ -1,0 +1,27 @@
+{
+  "name": "antigravity-helper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ncc run src/index.ts --quiet"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@techmmunity/symbiosis": "^0.0.31",
+    "@techmmunity/symbiosis-mongodb": "^0.0.8",
+    "@vercel/ncc": "^0.33.4",
+    "colors": "^1.4.0",
+    "discord.js": "^13.6.0",
+    "dotenv": "^16.0.0",
+    "reflect-metadata": "^0.1.13",
+    "typescript": "^4.6.3"
+  },
+  "devDependencies": {
+    "@techmmunity/eslint-config": "^5.2.3",
+    "eslint": "^8.14.0",
+    "prettier": "^2.6.2"
+  }
+}
