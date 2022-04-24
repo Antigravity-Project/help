@@ -1,3 +1,5 @@
+import type { TextChannel } from "discord.js";
+
 import type { Bot } from "./bot";
 
 export const getOrFetchChannel = async (client: Bot, channelId: string) => {
@@ -9,4 +11,17 @@ export const getOrFetchChannel = async (client: Bot, channelId: string) => {
 	}
 
 	return cachedChannel;
+};
+
+export const getOrFetchLastMessage = async (channel: TextChannel) => {
+	const lastMessageId = channel.lastMessageId;
+
+	const cachedLastMessage = channel.messages.cache.get(lastMessageId);
+	if (!cachedLastMessage) {
+		const fetchedLastMessage = await channel.messages.fetch(lastMessageId);
+
+		return fetchedLastMessage;
+	}
+
+	return cachedLastMessage;
 };
