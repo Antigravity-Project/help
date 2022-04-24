@@ -1,10 +1,11 @@
 import "dotenv/config";
 import { Rest } from "api/rest";
-import { Client, Collection } from "discord.js";
+import type { GuildMember } from "discord.js";
+import { Client, Collection, MessageEmbed } from "discord.js";
 import { getSlashCommands } from "handlers/commands";
-import { registerEvents } from "handlers/events";
 
 import { Logger } from "./logger";
+import { hasPermission } from "./permissions";
 
 import type { CommandCollection } from "types/command";
 
@@ -20,12 +21,43 @@ export class Bot extends Client<true> {
 
 		this.logger = new Logger();
 		this.commands = new Collection();
-		registerEvents(this);
 	}
 
 	public async run() {
 		this.commands = await getSlashCommands(this);
 		this.logger.info("Slash commands were registered");
+
+		this.on("interactionCreate", async interaction => {
+			if (!interaction.isCommand() || interaction.channel?.type === "DM") return; // eslint-disable-line prettier/prettier
+
+			const command = this.commands.get(interaction.commandName);
+			if (!hasPermission(interaction.member as GuildMember, command)) {
+				const permissionErrorEmbed = new MessageEmbed()
+					.setColor("RED")
+					.setDescription("Você não tem permissão para usar este comando!");
+
+				await interaction.reply({
+					ephemeral: true,
+					embeds: [permissionErrorEmbed],
+				});
+			}
+
+			try {
+				await command.execute(interaction);
+			} catch (error) {
+				const genericErrorEmbed = new MessageEmbed()
+					.setColor("RED")
+					.setDescription(
+						"Ocorreu um erro ao executar este comando. Perdão pela inconveniência!",
+					);
+
+				await interaction.reply({
+					embeds: [genericErrorEmbed],
+					ephemeral: true,
+				});
+				this.logger.error(error);
+			}
+		});
 
 		try {
 			await this.login(process.env.BOT_TOKEN);
