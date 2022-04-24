@@ -16,7 +16,7 @@ export interface CommandOptions {
 	description: string;
 	type: OptionTypeEnum;
 	required: boolean;
-	options?: Array<CommandOptions>;
+	options: Array<CommandOptions>;
 }
 
 export interface CommandData {
