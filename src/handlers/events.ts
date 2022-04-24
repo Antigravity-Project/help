@@ -12,7 +12,7 @@ export const registerEvents = async (client: Bot) => {
 		// eslint-disable-next-line no-await-in-loop
 		const event = await import(resolve(eventsPath, eventPath));
 
-		const { data, run } = new event.Event() as BaseEvent;
+		const { data, run } = new event.Event(client) as BaseEvent;
 		const { name, once } = data;
 		if (once) {
 			client.once(name, (...args) => {
