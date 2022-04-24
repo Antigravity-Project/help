@@ -4,24 +4,28 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ncc run src/index.ts --quiet"
+    "dev": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules -r tsconfig-paths/register src/index.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@discordjs/rest": "^0.4.1",
     "@techmmunity/symbiosis": "^0.0.31",
     "@techmmunity/symbiosis-mongodb": "^0.0.8",
     "@vercel/ncc": "^0.33.4",
     "colors": "^1.4.0",
+    "discord-api-types": "^0.31.2",
     "discord.js": "^13.6.0",
     "dotenv": "^16.0.0",
-    "reflect-metadata": "^0.1.13",
-    "typescript": "^4.6.3"
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@techmmunity/eslint-config": "^5.2.3",
     "eslint": "^8.14.0",
-    "prettier": "^2.6.2"
+    "prettier": "^2.6.2",
+    "ts-node-dev": "^1.1.8",
+    "tsconfig-paths": "^3.14.1",
+    "typescript": "4.5.5"
   }
 }
