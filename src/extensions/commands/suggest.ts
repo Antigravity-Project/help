@@ -74,8 +74,16 @@ export class Command extends BaseCommand {
 			})
 			.setDescription(suggestionContent);
 
-		await suggestionChannel.send({
+		const newSuggestion = await suggestionChannel.send({
 			embeds: [suggestionEmbed],
+		});
+		await newSuggestion.react("✅");
+		await newSuggestion.react("❌");
+
+		await suggestionChannel.threads.create({
+			name: "Discussão",
+			invitable: false,
+			startMessage: newSuggestion,
 		});
 
 		const suggestionSuccessfullySentEmbed = new MessageEmbed()
