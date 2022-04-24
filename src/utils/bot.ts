@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { Rest } from "api/rest";
+import { connectToMongo } from "database/connection";
 import type { GuildMember } from "discord.js";
 import { Client, Collection, MessageEmbed } from "discord.js";
 import { getSlashCommands } from "handlers/commands";
@@ -26,6 +27,9 @@ export class Bot extends Client<true> {
 	public async run() {
 		this.commands = await getSlashCommands(this);
 		this.logger.info("Slash commands were registered");
+
+		await connectToMongo();
+		this.logger.info("Connected to the database");
 
 		this.on("interactionCreate", async interaction => {
 			if (!interaction.isCommand() || interaction.channel?.type === "DM") return; // eslint-disable-line prettier/prettier
