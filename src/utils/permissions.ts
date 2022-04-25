@@ -6,7 +6,7 @@ export const hasPermission = (
 	{ permissions }: Command,
 ) => {
 	if (permissions) {
-		for (const commandPermission of Object.values(permissions)) {
+		for (const commandPermission of permissions) {
 			if (!member.permissions.has(commandPermission)) {
 				return false;
 			}

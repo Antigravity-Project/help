@@ -2,7 +2,7 @@ import "dotenv/config";
 import { Rest } from "api/rest";
 import { connectToMongo } from "database/connection";
 import type { GuildMember } from "discord.js";
-import { Client, Collection, MessageEmbed } from "discord.js";
+import { Client, Collection, MessageEmbed, Intents } from "discord.js";
 import { getSlashCommands } from "handlers/commands";
 
 import { Logger } from "./logger";
@@ -17,7 +17,7 @@ export class Bot extends Client<true> {
 
 	public constructor() {
 		super({
-			intents: [],
+			intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS],
 		});
 
 		this.logger = new Logger();
@@ -35,7 +35,10 @@ export class Bot extends Client<true> {
 			if (!interaction.isCommand() || interaction.channel?.type === "DM") return; // eslint-disable-line prettier/prettier
 
 			const command = this.commands.get(interaction.commandName);
-			if (!hasPermission(interaction.member as GuildMember, command)) {
+			const interactionMember = interaction.member as GuildMember;
+			const hasPermissions = hasPermission(interactionMember, command);
+
+			if (!hasPermissions) {
 				const permissionErrorEmbed = new MessageEmbed()
 					.setColor("RED")
 					.setDescription("Você não tem permissão para usar este comando!");

@@ -7,7 +7,7 @@ import type { Bot } from "utils/bot";
 
 import type { OptionTypeEnum } from "enums/option";
 
-export type CommandPermissions = Record<string, PermissionResolvable>;
+export type CommandPermissions = Array<PermissionResolvable>;
 
 export type CommandCollection = Collection<string, BaseCommand>;
 

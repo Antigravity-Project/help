@@ -1,3 +1,4 @@
+import { setGlobalConnection } from "@techmmunity/symbiosis";
 import { Connection } from "@techmmunity/symbiosis-mongodb";
 
 import { UsersEntity } from "./entities/users.entity";
@@ -12,4 +13,5 @@ export const connectToMongo = async () => {
 	}).load();
 
 	await connection.connect();
+	setGlobalConnection<Connection>(connection);
 };
