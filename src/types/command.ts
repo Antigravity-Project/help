@@ -9,7 +9,9 @@ import type { OptionTypeEnum } from "enums/option";
 
 export type CommandPermissions = Array<PermissionResolvable>;
 
-export type CommandCollection = Collection<string, BaseCommand>;
+export type CommandCollection = Collection<string, Command>;
+
+export type CommandHandler = (params: CommandParams) => Promise<void>;
 
 export interface CommandOptions {
 	name: string;
@@ -24,19 +26,16 @@ export interface CommandData {
 	description: string;
 	options?: Array<CommandOptions>;
 	defaultPermissions?: boolean;
+	permissions?: CommandPermissions;
 	type?: OptionTypeEnum;
 }
 
-export abstract class BaseCommand {
-	public client: Bot;
+export interface CommandParams {
+	client: Bot;
+	interaction: CommandInteraction;
+}
 
-	public permissions: CommandPermissions;
-
-	public data: CommandData;
-
-	public constructor(data: CommandData) {
-		this.data = data;
-	}
-
-	public abstract execute(interaction: CommandInteraction): Promise<void>;
+export interface Command {
+	data: CommandData;
+	handler: CommandHandler;
 }

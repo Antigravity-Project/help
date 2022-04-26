@@ -1,24 +1,18 @@
-import type { CommandInteraction } from "discord.js";
 import { MessageEmbed } from "discord.js";
-import type { Bot } from "utils/bot";
 
-import { BaseCommand } from "types/command";
+import type { CommandData, CommandHandler } from "types/command";
 
-export class Command extends BaseCommand {
-	public constructor(public client: Bot) {
-		super({
-			name: "ping",
-			description: "Veja a latência do bot",
-		});
-	}
+export const handler: CommandHandler = async ({ client, interaction }) => {
+	const embed = new MessageEmbed()
+		.setColor("GREEN")
+		.setDescription(`🔌〡Latência da API: **${client.ws.ping}ms**`);
 
-	public async execute(interaction: CommandInteraction) {
-		const embed = new MessageEmbed()
-			.setColor("GREEN")
-			.setDescription(`🔌〡Latência da API: **${this.client.ws.ping}ms**`);
+	await interaction.reply({
+		embeds: [embed],
+	});
+};
 
-		await interaction.reply({
-			embeds: [embed],
-		});
-	}
-}
+export const data: CommandData = {
+	name: "ping",
+	description: "Veja a latência do bot",
+};
