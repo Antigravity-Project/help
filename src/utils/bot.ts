@@ -18,6 +18,7 @@ export class Bot extends Client<true> {
 	public constructor() {
 		super({
 			intents: IntentsEnum.ALL,
+			partials: ["CHANNEL"],
 		});
 
 		this.logger = new Logger();
