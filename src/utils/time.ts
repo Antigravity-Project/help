@@ -9,7 +9,7 @@ export const formatTime = (attrs: Array<Array<number | string>>) => {
 		if (value > MIN_TIME) {
 			const hasS = value > 1 ? "s" : "";
 			const hasE = index + 1 === attrs.length ? "e" : "";
-			const hasTrailingSpace = index > MIN_INDEX ? " " : "";
+			const hasTrailingSpace = time.length > MIN_INDEX ? " " : "";
 
 			time += `${hasTrailingSpace}${hasE} ${value} ${name}${hasS}`;
 		}

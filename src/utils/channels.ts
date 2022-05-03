@@ -29,3 +29,17 @@ export const getOrFetchLastMessage = async (channel: TextChannel) => {
 export const mentionChannel = (channel: TextChannel) => {
 	return `<#${channel.id}>`;
 };
+
+export const getOrFetchMessage = async (
+	channel: TextChannel,
+	messageId: string,
+) => {
+	const cachedMessage = channel.messages.cache.get(messageId);
+	if (!cachedMessage) {
+		const fetchedMessage = (await channel.messages.fetch()).get(messageId);
+
+		return fetchedMessage;
+	}
+
+	return cachedMessage;
+};

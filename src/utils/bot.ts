@@ -1,7 +1,15 @@
 import "dotenv/config";
+import { getGlobalConnection } from "@techmmunity/symbiosis";
+import type { Connection } from "@techmmunity/symbiosis-mongodb";
 import { Rest } from "api/rest";
 import { connectToMongo } from "database/connection";
+import { GiveawaysEntity } from "database/entities/giveaways.entity";
+import { UsersEntity } from "database/entities/users.entity";
 import { Client, Collection } from "discord.js";
+import {
+	handleGiveaways,
+	HANDLE_GIVEAWAYS_MS,
+} from "extensions/tasks/handle-giveaways";
 import { getSlashCommands } from "handlers/commands";
 import { registerEvents } from "handlers/events";
 
@@ -15,6 +23,8 @@ export class Bot extends Client<true> {
 
 	public commands: CommandCollection;
 
+	public giveaways: Array<GiveawaysEntity>;
+
 	public constructor() {
 		super({
 			intents: IntentsEnum.ALL,
@@ -23,6 +33,7 @@ export class Bot extends Client<true> {
 
 		this.logger = new Logger();
 		this.commands = new Collection();
+		this.giveaways = [];
 	}
 
 	public async run() {
@@ -35,6 +46,14 @@ export class Bot extends Client<true> {
 		await connectToMongo();
 		this.logger.info("Connected to the database");
 
+		const connection = getGlobalConnection<Connection>();
+
+		const giveawaysRepository =
+			connection.getRepository<GiveawaysEntity>(GiveawaysEntity);
+
+		this.giveaways = (await giveawaysRepository.find({})).data;
+		this.logger.info("Cached giveaways");
+
 		try {
 			await this.login(process.env.BOT_TOKEN);
 
@@ -45,6 +64,17 @@ export class Bot extends Client<true> {
 			}
 
 			this.logger.info("Bot ready");
+
+			const usersRepository =
+				connection.getRepository<UsersEntity>(UsersEntity);
+
+			setInterval(
+				handleGiveaways,
+				HANDLE_GIVEAWAYS_MS,
+				this,
+				giveawaysRepository,
+				usersRepository,
+			);
 		} catch (error) {
 			this.logger.error(error);
 		}

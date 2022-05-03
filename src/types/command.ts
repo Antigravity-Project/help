@@ -17,8 +17,9 @@ export interface CommandOptions {
 	name: string;
 	description: string;
 	type: OptionTypeEnum;
-	required: boolean;
+	required?: boolean;
 	options?: Array<CommandOptions>;
+	choices?: Record<string, string>;
 }
 
 export interface CommandData {
