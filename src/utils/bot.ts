@@ -52,7 +52,7 @@ export class Bot extends Client<true> {
 			connection.getRepository<GiveawaysEntity>(GiveawaysEntity);
 
 		this.giveaways = (await giveawaysRepository.find({})).data;
-		this.logger.info("Cached giveaways");
+		this.logger.info("Giveaways were cached");
 
 		try {
 			await this.login(process.env.BOT_TOKEN);
